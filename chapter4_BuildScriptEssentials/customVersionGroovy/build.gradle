@@ -1,0 +1,22 @@
+//project.version = new ProjectVersion(0, 1)//gradle использует метод toString() для определения версии
+project.ext.versionFile = file('version.properties')//Project содержит метод file, создающий экз. groovy file
+
+task loadVersion {
+    ProjectVersionSerializer serializer = new ProjectVersionSerializer()
+    project.version = serializer.readVersion(versionFile)
+    //конфигурация задачи, выполняется всегда, даже если задача не вызывается
+    //конфигурация выполняется до действий задач
+}
+task printVersion{
+    doLast{
+        println project.version
+    }
+}
+project.task(["type":ReleaseVersionTask],"makeReleaseVersion"){
+        release = project.version.release
+        destFile = project.versionFile
+        doLast{
+            println "making release version"
+        }
+    }
+

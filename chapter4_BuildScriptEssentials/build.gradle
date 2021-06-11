@@ -1,0 +1,42 @@
+//Project - это интерфейс, представляющий собой проект
+project.setDescription('My Project')
+println project.getDescription()
+println getDescription()
+//задача может содержать множество closure в doLast, doFirst
+task task1{
+    
+}
+task1.doLast {println 'task1 1'}
+task1.doLast {println 'task1 2'}
+
+project.task('task2',{
+    doLast{
+        println 'task2 completed'
+    }
+})
+task2.doLast({->
+    println "task2 2nd action"
+})
+task task3{
+    doLast{
+        println 'task3 completed'
+    }
+}
+//задача может зависеть от мн-ва других задач
+task3.dependsOn(task1,task2)
+//задачи могут группироваться и иметь описание
+//все это видно при выполнении gradle tasks
+task printVersion {
+    group = 'versioning'
+    description = 'Prints project version.'
+    doLast {
+      //gradle содержит свою реализацию логгера
+      //на основе SLF4j
+      logger.quiet "Version: $version"
+    }
+}
+//вторая задача всегда выполняется после первой (даже если первая выполнилась с ошибкой)
+//используется например для освобождения ресурсов, используемых первой задачей
+task first << { println "first" }
+task second << { println "second" }
+first.finalizedBy second

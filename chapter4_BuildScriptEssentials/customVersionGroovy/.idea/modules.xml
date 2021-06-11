@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customVersion.iml" filepath="$PROJECT_DIR$/.idea/modules/customVersion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/customVersionGroovy.iml" filepath="$PROJECT_DIR$/customVersionGroovy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customVersionGroovy.buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/customVersionGroovy.buildSrc.iml" />
+    </modules>
+  </component>
+</project>

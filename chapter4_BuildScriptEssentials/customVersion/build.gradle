@@ -1,0 +1,63 @@
+//project.version = new ProjectVersion(0, 1)//gradle использует метод toString() для определения версии
+
+ext.versionFile = file('version.properties')//Project содержит метод file, создающий экз. groovy file
+
+task loadVersion {
+    project.version = readVersion()
+    //конфигурация задачи, выполняется всегда, даже если задача не вызывается
+    //конфигурация выполняется до действий задач
+}
+//задача указывает входные и выходные данные, чтобы gradle не выполнял её
+//если данные не изменились с момента последнего запуска
+task makeReleaseVersion {
+    group = 'versioning'
+    description = 'Make release version'
+    //указываю входные и выходные данные
+    inputs.property('release', project.version.release)
+    outputs.file(versionFile)
+    doLast {
+        version.release = true
+        //запись в файл при помощи ант-задачи
+        ant.propertyfile(file: versionFile) {
+            entry(key: 'release', type: 'string', operation: '=', value: 'true')
+        }
+    }
+
+  
+}
+ProjectVersion readVersion() {
+    logger.quiet 'Reading the version file.'
+    if(!ext.versionFile.exists()) {
+        throw new Exception("Required version file does not exist:$versionFile.canonicalPath")
+    }
+    Properties versionProps = new Properties()
+    //читаем свойства из файла
+    versionFile.withInputStream { stream ->
+        versionProps.load(stream)
+    }
+    return new ProjectVersion(versionProps.major.toInteger(),
+        versionProps.minor.toInteger(), 
+        versionProps.release.toBoolean())
+}
+class ProjectVersion {
+    Integer major
+    Integer minor
+    Boolean release
+    ProjectVersion(Integer major, Integer minor) {
+        this.major = major
+        this.minor = minor
+        this.release = Boolean.FALSE
+    }
+    ProjectVersion(Integer major, Integer minor, Boolean release) {
+        this(major, minor)
+        this.release = release
+    }
+    String toString() {
+        return "$major.$minor${release ? '' : '-SNAPSHOT'}"
+    }
+}
+task printVersion{
+    doLast{
+        println project.version
+    }
+}

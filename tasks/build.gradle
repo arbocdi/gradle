@@ -1,0 +1,11 @@
+task taskOne {
+  doLast {
+    println "task one completed"
+  }
+}
+task taskTwo {
+  doLast {
+    println "task two completed"
+  }
+}
+taskTwo.dependsOn taskOne
